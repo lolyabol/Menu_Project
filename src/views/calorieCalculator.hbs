@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор калорий</title>
+    <link rel="stylesheet" href="/styles/calcStyle.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Калькулятор калорий</h1>
+        <label for="weightInput">Вес (кг): </label>
+        <input type="number" id="weightInput" required min="1">
+        
+        <label for="heightInput">Рост (см): </label>
+        <input type="number" id="heightInput" required min="1">
+        
+        <label for="ageInput">Возраст (лет): </label>
+        <input type="number" id="ageInput" required min="1">
+        
+        <label for="gender">Пол: </label>
+        <select id="gender" required>
+            <option value="">Выберите пол</option>
+            <option value="male">Мужской</option>
+            <option value="female">Женский</option>
+        </select>
+        
+        <label for="activityLevel">Уровень активности: </label>
+        <select id="activityLevel" required>
+            <option value="">Выберите уровень активности</option>
+            <option value="1.2">Сидячий образ жизни</option>
+            <option value="1.375">Низкая активность</option>
+            <option value="1.55">Умеренная активность</option>
+            <option value="1.725">Высокая активность</option>
+        </select>
+        
+        <button id="calculateCalories">Рассчитать калории</button>
+        <p id="calorieResult"></p>
+    </div>
+    <script src="/scripts/calcScript.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/styles/menuConstructorStyle.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Выберите продукты:</h2>   
+        <div class="ingredients-container">
+            <div class="ingredients-header">Ингредиенты</div>
+            <div class="ingredients-list" id="ingredientsList">
+                <div><label><input type="checkbox" value="курица"> Курица</label><img src="https://img.freepik.com/free-vector/meat-product-turkey_24908-82780.jpg" alt="Кура" srcset=""></div>
+                <div><label><input type="checkbox" value="рис"> Рис</label></div>
+                <div><label><input type="checkbox" value="овощи"> Томат</label></div>
+                <div><label><input type="checkbox" value="овощи"> Болгарский перец</label></div>
+                <div><label><input type="checkbox" value="овощи"> Огурец</label></div>
+                <div><label><input type="checkbox" value="овощи"> Перец чили</label></div>
+                <div><label><input type="checkbox" value="овощи"> Морковь</label></div>
+                <div><label><input type="checkbox" value="овощи"> Авокадо</label></div>
+                <div><label><input type="checkbox" value="овощи"> Овощи</label></div>
+                <div><label><input type="checkbox" value="яйцо"> Яйцо</label></div>
+                <div><label><input type="checkbox" value="помидор"> Помидор</label></div>
+                <div><label><input type="checkbox" value="мука"> Мука</label></div>
+                <div><label><input type="checkbox" value="картофель"> Картофель</label></div>
+                <div><label><input type="checkbox" value="масло"> Масло</label></div>
+                <div><label><input type="checkbox" value="свекла"> Свекла</label></div>
+                <div><label><input type="checkbox" value="капуста"> Капуста</label></div>
+                <div><label><input type="checkbox" value="мясо"> Свинина</label></div>
+                <div><label><input type="checkbox" value="мясо"> Говядина</label></div>
+                <div><label><input type="checkbox" value="мясо"> Утятина</label></div>
+                <div><label><input type="checkbox" value="мясо"> Баранина</label></div>
+                <div><label><input type="checkbox" value="мясо"> Обезьятина</label></div>
+                <div><label><input type="checkbox" value="сметана"> Сметана</label></div>
+                <div><label><input type="checkbox" value="овсяные хлопья"> Овсяные хлопья</label></div>
+                <div><label><input type="checkbox" value="сахар"> Сахар</label></div>
+                <div><label><input type="checkbox" value="огурцы"> Огурцы (соленые)</label></div>
+                <div><label><input type="checkbox" value="лимон"> Лимон</label></div>
+                <div><label><input type="checkbox" value="творог"> Творог</label></div>
+            </div>
+        </div>
+        <h2>Выберите блюда для:</h2>
+        <select id="mealType">
+            <option value="breakfast">Завтрак</option>
+            <option value="lunch">Обед</option>
+            <option value="dinner">Ужин</option>
+        </select>
+        <button id="findDishes">Найти блюда</button>
+        
+        <div class="menu">
+            <h2>Доступные блюда:</h2>
+            <div class="dish-cards" id="dishes"></div>
+        </div>
+    </div>
+    <script src="scripts/script.js"></script>
+</body>
+</html>

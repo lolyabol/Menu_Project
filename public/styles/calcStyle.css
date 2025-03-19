@@ -1,0 +1,89 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #79c273;
+    color: #6a4f4b;
+}
+
+.container {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 25px;
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: #4CAF50;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #222222;
+}
+
+input[type="number"],
+select {
+    width: 93.5%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #00f708;
+    border-radius: 10px;
+    font-size: 16px;
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: #18811b;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #28b32d;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+    background-color: #18811b;
+    transform: translateY(-2px);
+}
+#activityLevel {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #00f708;
+    border-radius: 10px;
+    font-size: 16px;
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+#calorieResult {
+    margin-top: 20px;
+    font-size: 18px;
+    text-align: center;
+    color: #6a4f4b;
+    font-weight: bold;
+    border-top: 2px solid #00f708;
+    padding-top: 10px;
+}
+#gender {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 2px solid #00f708;
+    border-radius: 10px;
+    font-size: 16px;
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <title>Login</title>
+    <style>
+        body {
+    background-color: #79c273; /* Фоновый цвет */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Эффект размытия для фона */
+::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(10px);
+    z-index: -1; /* Позади контейнера */
+}
+
+.container {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 5% 3%; /* Подходящие отступы по бокам */
+    width: 100%; /* Адаптивная ширина */
+    max-width: 600px; /* Максимальная ширина для больших экранов */
+}
+
+.container-welcome {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #333; /* Цвет заголовка приветствия */
+}
+
+h2 {
+    color: #333; /* Цвет заголовка входа */
+}
+
+label {
+    margin-top: 10px;
+    display: block;
+    color: #555;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 96.3%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    background-color: #79c273;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-top: 15px;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #6bae62;
+}
+
+.message {
+    color: red;
+    margin-top: 10px;
+}
+
+.goodMessage {
+    color: green;
+    margin-top: 10px;
+}
+
+p {
+    text-align: center;
+    color: #777;
+}
+
+a {
+    color: #79c273;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+    <div class="container-welcome">
+        <div class="welcome">
+            <h1>Добро пожаловать</h1>
+            <p>Пожалуйста, войдите в свою учетную запись</p>
+        </div>
+    </div>
+    <div class="form-container">
+        <div class="Enter"><h2>Вход</h2></div>
+        <form action="/login" method="POST">
+            <label>
+                <input type="email" name="email" required placeholder="Email" />
+            </label>
+            <label>
+                <input type="password" name="password" required placeholder="Пароль" />
+            </label>
+            <button type="submit">Войти</button>
+        </form>
+        <p>Ещё нет аккаунта? <a href="/registration">Зарегистрироваться</a></p> <!-- Добавлен правильный путь -->
+    </div>
+</div>
+
+<!--<h2>Мы в соцсетях</h2>
+
+           <div class="social-links">
+                <a href="https://www.youtube.com" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="YouTube">
+                </a>
+                <a href="https://rutube.ru" target="_blank">
+                    <img src="https://www.ecvols.ru/img/gc/stock/rutube-icon.png" alt="RuTube">
+                </a>
+                <a href="https://vk.com" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/VK_Compact_Logo_%282021-present%29.svg/440px-VK_Compact_Logo_%282021-present%29.svg.png" alt="ВКонтакте">
+                </a>
+                <a href="https://zen.yandex.ru" target="_blank">
+                    <img src="https://aftershock.news/sites/default/files/u29824/teasers/dddddddddddddddddd_0.jpg" class="zen" alt="Яндекс Дзен">
+                </a>
+            </div>!-->
+    
+    
+    <script>
+        
+    </script>
+</body>
+</html>
