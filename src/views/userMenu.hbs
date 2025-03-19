@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню</title>
+    <style>
+
+.selected-menu {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.selected-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.dish-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.dish-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dish-card h3 {
+    font-size: 18px;
+    color: #d32f2f;
+}
+
+.calories {
+    color: #757575;
+    margin: 10px 0;
+}
+
+.remove-button {
+    background-color: #e57373;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.remove-button:hover {
+    background-color: #d32f2f;
+}
+
+
+    </style>
+</head>
+<body>  
+<div class="selected-menu">
+            <h2>Ваше меню:</h2>
+            <div class="selected-cards" id="selectedDishes"></div>
+            <p id="totalCalories"></p>
+        </div>
+</body>
+</html>

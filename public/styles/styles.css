@@ -2,9 +2,7 @@
 body{
   margin: 0;
   padding: 0;
-  
-  /* make it look decent enough */
-  background: #232323;
+  background: #79c273;
   color: #797979;
   font-family: "Avenir Next", "Avenir", sans-serif;
 }
