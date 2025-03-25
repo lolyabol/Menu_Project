@@ -2,7 +2,7 @@ import User from '../models/User.js';
 import bcrypt from 'bcrypt';
    
 
-export const showLoginPage = (req, res) => {
+export const LoginPage = (req, res) => {
     console.log("showLoginPage вызван");
     res.render('login');
 };

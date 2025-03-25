@@ -1,10 +1,10 @@
 import { registerUser } from '../services/registrationService.js';
 
-function showRegistrationPage(req, res) {
+function RegistrationPage(req, res) {
     res.render('registration'); 
 }
 
-const registerController = async (req, res) => {
+const registrationController = async (req, res) => {
     const { username, email, password } = req.body;
 
     try {
@@ -16,6 +16,6 @@ const registerController = async (req, res) => {
 };
 
 export default {
-    showRegistrationPage,
-    registerController
+    RegistrationPage,
+    registrationController
 };

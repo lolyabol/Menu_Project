@@ -1,9 +1,9 @@
 import express from 'express';
-import { showLoginPage, handleLogin } from '../controllers/loginController.js';
+import { LoginPage, handleLogin } from '../controllers/loginController.js';
 
 const router = express.Router();
 
-router.get('/', showLoginPage);
+router.get('/', LoginPage);
 
 router.post('/', handleLogin);
 

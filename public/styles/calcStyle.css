@@ -1,23 +1,36 @@
+main{
+    margin: 0;
+}
 body {
+    height: 100%;
     font-family: 'Arial', sans-serif;
-    background-color: #79c273;
+    background: url('https://static.103.by/images/common/wysiwyg/2022/04/4950512b7a854b228e2607802d4d3b54.jpg');
     color: #6a4f4b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; 
 }
 
 .container {
-    max-width: 400px;
-    margin: 100px auto;
+    width: 90%;
     padding: 25px;
-    background: #ffffff;
+    margin-top: 20%;
+    background: rgb(255, 255, 255, 0.3);
     border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.1),
+        0 4px 10px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
 }
+
+
 
 h1 {
     text-align: center;
     font-size: 26px;
     margin-bottom: 20px;
-    color: #4CAF50;
+    color: #ffffff;
 }
 
 label {

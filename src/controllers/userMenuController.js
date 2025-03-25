@@ -1,3 +1,3 @@
-export function showUserMenuPage(req, res) {
+export function UserMenuPage(req, res) {
     res.render('userMenu'); 
 }

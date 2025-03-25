@@ -1,6 +1,6 @@
 
-export const showAboutPage = (req, res) => {
+export const AboutPage = (req, res) => {
     console.log("Отображение страницы 'О нас'");
-    res.render('about'); // Предположим, у вас есть шаблон 'about.hbs'
+    res.render('about'); 
 };
 
