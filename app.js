@@ -8,7 +8,8 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import registration from './src/controllers/registrationController.js';
 import loginRouter from './src/routes/loginRouter.js';
-import ingredientRoutes from './routes/ingredientRoutes.js';
+import { addIngredient } from './src/controllers/ingredientController.js';
+import { addDish, getDishesByIngredients } from './src/controllers/dishController.js';
 import mainRouter from './src/routes/mainRouter.js';
 import crypto from 'crypto';
 import Ingredient from './src/models/Ingredient.js';
@@ -51,16 +52,14 @@ app.use((req, res, next) => {
     next();
 });
 
-// Определение маршрутов
-// app.post('/ingredients', (req, res, next) => {
-//     console.log('POST /ingredients', req.body); 
-//     next();
-// }, addIngredient);
-// app.post('/dishes', (req, res, next) => {
-//     console.log('POST /dishes', req.body); 
-//     next();
-// }, addIngredient);
-app.use('/ingredients', ingredientRoutes);
+app.post('/ingredients', (req, res, next) => {
+    console.log('POST /ingredients', req.body); 
+    next();
+}, addIngredient);
+
+app.post('/dishes', addDish);
+app.post('/api/dishes', getDishesByIngredients);
+
 const { RegistrationPage, registrationController } = registration; 
 app.get('/', RegistrationPage);
 app.use('/registration', registrationController);

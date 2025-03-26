@@ -4,13 +4,15 @@ import { AboutPage } from '../controllers/aboutController.js';
 import { CalorieCalculatorPage } from '../controllers/calorieController.js';
 import { MenuConstructorPage } from '../controllers/menuConstructorController.js';
 import { UserMenuPage } from '../controllers/userMenuController.js';
+import { addDish } from '../controllers/dishController.js';
 
 const router = Router();
 
 router.get('/', HomePage); 
 router.get('/about', AboutPage);
 router.get('/calorieCalculator', CalorieCalculatorPage);
-router.get('/menuConstructor', MenuConstructorPage)
+router.get('/menuConstructor', MenuConstructorPage, addDish);
+router.get('/ingredient')
 router.get('/userMenu', UserMenuPage);
 router.get('/home', HomePage);
 
@@ -19,3 +21,4 @@ router.use((req, res) => {
 });
 
 export default router;
+

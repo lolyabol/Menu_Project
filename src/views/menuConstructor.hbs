@@ -9,36 +9,40 @@
 
 <body>
     <h1>Выберите ингредиенты:</h1>
+    <body>
     <div class="container">
-        {{#each ingredients}}
-        <div class="ingredientCard">
-            <h2>{{this.name}}</h2>
-            <p>Количество: {{this.quantity}}</p>
-            {{#if this.imageURL}}
-                <img src="{{this.imageURL}}" alt="{{this.name}}" />
-            {{/if}}
-        </div>
-        {{/each}}
+    {{#each ingredients}}
+    <div class="ingredientCard" onclick="toggleSelection(this)">
+        <input type="checkbox" class="hiddenCheckbox" />
+        <h2>{{this.name}}</h2>
+        <p>Количество: {{this.quantity}}</p>
+        {{#if this.imageURL}}
+            <img src="{{this.imageURL}}" alt="{{this.name}}" />
+        {{/if}}
     </div>
+    {{/each}}
+</div>
 
     <h2>Блюда с выбранными ингредиентами:</h2>
-    <div class="dishesContainer">
-        {{#each dishes}}
-        <div class="dishCard">
-            <h3>{{this.name}}</h3>
-            <p>Калории: {{this.calories}}</p>
-            <p>{{this.description}}</p>
-            <h4>Ингредиенты:</h4>
-            <ul>
-                {{#each this.ingredients}}
-                <li>{{this.name}}</li>
-                {{/each}}
-            </ul>
-        </div>
-        {{else}}
-        <p>Нет блюд с выбранными ингредиентами.</p>
-        {{/each}}
+    <script id="dishes-template" type="text/x-handlebars-template">
+    {{#each dishes}}
+    <div class="dishCard">
+        <h3>{{this.name}}</h3>
+        <p>Калории: {{this.calories}}</p>
+        <p>{{this.description}}</p>
+        <h4>Ингредиенты:</h4>
+        <ul>
+            {{#each this.ingredients}}
+            <li>{{this.name}}</li>
+            {{/each}}
+        </ul>
     </div>
+    {{else}}
+    <p>Нет блюд с выбранными ингредиентами.</p>
+    {{/each}}
+</script>
+    </div>
+    <script src="/scripts/menuCostructorScript.js"></script>
 </body>
 
 </html>

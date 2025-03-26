@@ -1,5 +1,5 @@
 import Ingredient from '../models/Ingredient.js';
-import Dish from '../models/Dish.js';
+import Dish from '../models/Dish.js'; 
 
 export const MenuConstructorPage = async (req, res) => {
     try {
@@ -25,3 +25,4 @@ export const MenuConstructorPage = async (req, res) => {
         res.status(500).send('Ошибка при загрузке страницы');
     }
 };
+

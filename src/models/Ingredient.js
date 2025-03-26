@@ -1,8 +1,12 @@
 import { DataTypes } from 'sequelize';
-import sequelizeDB from '../db.js';
+import sequelizeDB from '../db.js'; 
 
-const Dish = sequelizeDB.define('Dish', {
+const Ingredient = sequelizeDB.define('Ingredient', {
     name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    quantity: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -10,14 +14,10 @@ const Dish = sequelizeDB.define('Dish', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    description: {
+    imageURL: { 
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true,  
     },
-    ingredients: {
-        type: DataTypes.JSONB, 
-        allowNull: false,
-    }
 });
 
-export default Dish;
+export default Ingredient;

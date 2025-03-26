@@ -6,7 +6,7 @@
     <title>Login</title>
     <style>
         body {
-    background-color: #79c273; 
+    background-color: #79c273; /* Фоновый цвет */
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -18,6 +18,7 @@
     position: relative;
 }
 
+/* Эффект размытия для фона */
 ::before {
     content: '';
     position: absolute;
@@ -26,16 +27,16 @@
     right: 0;
     bottom: 0;
     backdrop-filter: blur(10px);
-    z-index: -1;
+    z-index: -1; /* Позади контейнера */
 }
 
 .container {
     background: white;
     border-radius: 10px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    padding: 5% 3%; 
-    width: 100%; 
-    max-width: 600px; 
+    padding: 5% 3%; /* Подходящие отступы по бокам */
+    width: 100%; /* Адаптивная ширина */
+    max-width: 600px; /* Максимальная ширина для больших экранов */
 }
 
 .container-welcome {
@@ -44,11 +45,11 @@
 }
 
 h1 {
-    color: #333;
+    color: #333; /* Цвет заголовка приветствия */
 }
 
 h2 {
-    color: #333; 
+    color: #333; /* Цвет заголовка входа */
 }
 
 label {
