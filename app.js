@@ -2,18 +2,19 @@ import express from 'express';
 import session from 'express-session';
 import User from './src/models/User.js';
 import Dish from './src/models/Dish.js';
-import sequelize from './src/db.js';
 import { engine } from 'express-handlebars';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import registration from './src/controllers/registrationController.js';
 import loginRouter from './src/routes/loginRouter.js';
 import { addIngredient } from './src/controllers/ingredientController.js';
-import { addDish, getDishesByIngredients } from './src/controllers/dishController.js';
+import { addDish } from './src/controllers/dishController.js';
 import mainRouter from './src/routes/mainRouter.js';
 import crypto from 'crypto';
 import Ingredient from './src/models/Ingredient.js';
 import cors from 'cors'; 
+import connectDB from './src/db.js'; 
+import registrationRouter from './src/routes/registrationRouter.js';
 
 const app = express(); 
 const PORT = process.env.PORT || 3000;
@@ -58,27 +59,49 @@ app.post('/ingredients', (req, res, next) => {
 }, addIngredient);
 
 app.post('/dishes', addDish);
-app.post('/api/dishes', getDishesByIngredients);
+app.post('/api/dishes', (req, res) => {
+    const { name, calories, description, ingredients } = req.body;
+
+    if (!name || !calories || !description || !ingredients) {
+        return res.status(400).json({ message: 'Недостаточно данных' });
+    }
+
+    try {
+
+        console.log('Полученные данные:', req.body);
+
+        res.status(200).json({
+            message: 'Блюдо успешно добавлено',
+            dish: {
+                name,
+                calories,
+                description,
+                ingredients
+            }
+        });
+    } catch (error) {
+        console.error('Ошибка при обработке данных:', error);
+        res.status(500).json({ message: 'Внутренняя ошибка сервера' });
+    }
+});
+
 
 const { RegistrationPage, registrationController } = registration; 
 app.get('/', RegistrationPage);
-app.use('/registration', registrationController);
+app.use('/registration', registrationRouter);
 app.use('/login', loginRouter);
 app.use('/main', mainRouter);
 
 const startServer = async () => {
-    try {
-        await sequelize.authenticate();
-        console.log('Подключение к SQLite успешно!');
-        await User.sync();
-        await Dish.sync();
-        await Ingredient.sync();
-        app.listen(PORT, () => {
-            console.log(`Сервер запущен на http://localhost:${PORT}`); 
-        });
-    } catch (error) {
-        console.error('Не удалось подключиться к базе данных:', error);
-    }
+    await connectDB(); 
+
+    await User.syncIndexes();
+    await Dish.syncIndexes();
+    await Ingredient.syncIndexes();
+
+    app.listen(PORT, () => {
+        console.log(`Сервер запущен на http://localhost:${PORT}`);
+    });
 };
 
 startServer();

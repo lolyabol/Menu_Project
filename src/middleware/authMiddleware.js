@@ -1,12 +1,6 @@
-import session from 'express-session';
-import crypto from 'crypto';
-
-const secret = crypto.randomBytes(64).toString('hex');
-console.log(secret);
-
-app.use(session({
-    secret: secret, 
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false } 
-}));
+export const isAuthenticated = (req, res, next) => {
+    if (req.session.userId) {
+        return next();
+    }
+    res.redirect('/login'); // Перенаправление на страницу входа, если пользователь не авторизован
+};

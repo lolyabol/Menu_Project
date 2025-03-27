@@ -28,11 +28,17 @@ export const getDishesByIngredients = async (req, res) => {
     try {
         const { ingredientIds } = req.body;
 
-        const dishes = await Dish.find({ 'ingredients.id': { $in: ingredientIds } });
-
-        res.json(dishes);
-    } catch (error) {
-        console.error('Ошибка при получении блюд:', error);
-        res.status(500).json({ message: 'Ошибка при получении блюд' });
+        if (!Array.isArray(ingredientIds) || ingredientIds.length === 0) {            
+            return res.status(400).json({ message: 'Необходимо передать массив идентификаторов ингредиентов' });
     }
+
+    const dishes = await Dish.find({ 'ingredients.id': { $in: ingredientIds } });
+
+    res.json(dishes);
+} catch (error) {
+    console.error('Ошибка при получении блюд:', error);
+    res.status(500).json({ message: 'Ошибка при получении блюд' });
+}
 };
+
+

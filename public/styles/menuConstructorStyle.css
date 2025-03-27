@@ -20,6 +20,7 @@ body {
 
 .ingredientCard img {
     max-width: 100%;
+    min-height: 65%;
     height: auto;
     box-shadow: 1px 1px 10px #67696bc5;
     border-radius: 10px;

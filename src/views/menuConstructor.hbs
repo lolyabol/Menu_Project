@@ -5,43 +5,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="/styles/menuConstructorStyle.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 </head>
 
 <body>
     <h1>Выберите ингредиенты:</h1>
-    <body>
     <div class="container">
-    {{#each ingredients}}
-    <div class="ingredientCard" onclick="toggleSelection(this)">
-        <input type="checkbox" class="hiddenCheckbox" />
-        <h2>{{this.name}}</h2>
-        <p>Количество: {{this.quantity}}</p>
-        {{#if this.imageURL}}
-            <img src="{{this.imageURL}}" alt="{{this.name}}" />
-        {{/if}}
+        {{#each ingredients}}
+        <div class="ingredientCard" data-id="{{this.id}}" onclick="toggleSelection(this)">
+            <input type="checkbox" class="hiddenCheckbox" />
+            <h2>{{this.name}}</h2>
+            <p>Количество: {{this.quantity}}</p>
+            {{#if this.imageURL}}
+                <img src="{{this.imageURL}}" alt="{{this.name}}" />
+            {{/if}}
+        </div>
+        {{/each}}
     </div>
-    {{/each}}
-</div>
 
     <h2>Блюда с выбранными ингредиентами:</h2>
-    <script id="dishes-template" type="text/x-handlebars-template">
-    {{#each dishes}}
-    <div class="dishCard">
-        <h3>{{this.name}}</h3>
-        <p>Калории: {{this.calories}}</p>
-        <p>{{this.description}}</p>
-        <h4>Ингредиенты:</h4>
-        <ul>
-            {{#each this.ingredients}}
-            <li>{{this.name}}</li>
-            {{/each}}
-        </ul>
+    <div id="dishes-container">
+        <script id="dishes-template" type="text/x-handlebars-template">
+        {{#each dishes}}
+        <div class="dishCard">
+            <h3>{{this.name}}</h3>
+            <p>Калории: {{this.calories}}</p>
+            <p>{{this.description}}</p>
+            <h4>Ингредиенты:</h4>
+            <ul>
+                {{#each this.ingredients}}
+                <li>{{this.name}}</li>
+                {{/each}}
+            </ul>
+        </div>
+        {{else}}
+        <p>Нет блюд с выбранными ингредиентами.</p>
+        {{/each}}
+        </script>
     </div>
-    {{else}}
-    <p>Нет блюд с выбранными ингредиентами.</p>
-    {{/each}}
-</script>
-    </div>
+
+    <button onclick="getSelectedIngredients()">Показать блюда</button>
+
+    <script>
+        // Массив для хранения выбранных ингредиентов
+        const selectedIngredientIds = [];
+
+        // Функция для переключения выбора ингредиента
+        function toggleSelection(element) {
+            const checkbox = element.querySelector('.hiddenCheckbox');
+            checkbox.checked = !checkbox.checked;
+
+            const ingredientId = element.getAttribute('data-id');
+
+            if (checkbox.checked) {
+                selectedIngredientIds.push(ingredientId);
+            } else {
+                const index = selectedIngredientIds.indexOf(ingredientId);
+                if (index > -1) {
+                    selectedIngredientIds.splice(index, 1);
+                }
+            }
+        }
+
+        // Функция для получения выбранных ингредиентов и отображения блюд
+        function getSelectedIngredients() {
+            fetch('/api/dishes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ingredientIds: selectedIngredientIds })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const template = Handlebars.compile(document.getElementById('dishes-template').innerHTML);
+                document.getElementById('dishes-container').innerHTML = template({ dishes: data });
+            })
+            .catch(error => console.error('Ошибка:', error));
+        }
+    </script>
+<style>
+    .ingredientCard.selected {
+        background-color: #d3f3d3; /* Цвет для выбранной карточки */
+    }
+</style>
     <script src="/scripts/menuCostructorScript.js"></script>
 </body>
 

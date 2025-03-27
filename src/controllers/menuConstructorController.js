@@ -3,13 +3,13 @@ import Dish from '../models/Dish.js';
 
 export const MenuConstructorPage = async (req, res) => {
     try {
-        const ingredients = await Ingredient.findAll();
+        const ingredients = await Ingredient.find(); 
         
-        const plainIngredients = ingredients.map(ingredient => ingredient.get({ plain: true }));
+        const plainIngredients = ingredients.map(ingredient => ingredient.toObject());
 
-        const dishes = await Dish.findAll(); 
+        const dishes = await Dish.find(); 
 
-        const plainDishes = dishes.map(dish => dish.get({ plain: true }));
+        const plainDishes = dishes.map(dish => dish.toObject());
 
         const selectedIngredientIds = req.body.selectedIngredients || []; 
         const matchingDishes = plainDishes.filter(dish => 
@@ -25,4 +25,3 @@ export const MenuConstructorPage = async (req, res) => {
         res.status(500).send('Ошибка при загрузке страницы');
     }
 };
-

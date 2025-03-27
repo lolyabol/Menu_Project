@@ -5,8 +5,8 @@ export const addIngredient = async (req, res) => {
         console.log('Полученные данные:', req.body); 
         const { name, quantity, imageURL, calories } = req.body;
 
-        if (!name || !quantity || !imageURL || !calories) {
-            return res.status(400).json({ message: 'Имя, изображение, количество и калории обязательны' });
+        if (!name || !quantity || !calories) {
+            return res.status(400).json({ message: 'Имя, количество и калории обязательны' });
         }
 
         const newIngredient = await Ingredient.create({ name, quantity, imageURL, calories });

@@ -1,23 +1,25 @@
-import { DataTypes } from 'sequelize';
-import sequelizeDB from '../db.js';
+import mongoose from 'mongoose';
 
-const Dish = sequelizeDB.define('Dish', {
+const dishSchema = new mongoose.Schema({
     name: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        type: String,
+        required: true,
     },
     calories: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+        type: Number,
+        required: true,
     },
     description: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: String,
+        required: false,
     },
-    ingredients: {
-        type: DataTypes.JSONB, 
-        allowNull: false,
-    }
+    ingredients: [{
+        type: mongoose.Schema.Types.ObjectId, // Ссылка на объект ингредиента
+        ref: 'Ingredient', // Имя модели ингредиента
+        required: true,
+    }]
 });
+
+const Dish = mongoose.model('Dish', dishSchema);
 
 export default Dish;

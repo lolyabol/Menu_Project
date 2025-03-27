@@ -1,20 +1,15 @@
-import { Sequelize } from 'sequelize';
+import { connect } from 'mongoose';
 
-const sequelizeDB = new Sequelize({
-    dialect: 'sqlite',
-    storage: 'database.db', 
-});
-
-async function testConnection() {
+const connectDB = async () => {
     try {
-        await sequelizeDB.authenticate();
-        console.log('Соединение с базой данных успешно установлено.');
+        await connect('mongodb+srv://vturilasy:1f3t48y2@menuprojectdb.r1ilxoz.mongodb.net/?retryWrites=true&w=majority&appName=MenuProjectDB', {
+
+        });
+        console.log('MongoDB подключен');
     } catch (error) {
-        console.error('Не удалось подключиться к базе данных:', error);
+        console.error('Ошибка подключения к MongoDB:', error);
+        process.exit(1);
     }
-}
+};
 
-testConnection();
-
-export default sequelizeDB;
-
+export default connectDB;
