@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
-import Ingredient from '../models/Ingredient'; // Убедитесь, что путь к модели правильный
+import Ingredient from '../models/Ingredient'; 
 
-// Подключение к базе данных MongoDB
 mongoose.connect('mongodb://localhost:27017/yourDatabaseName', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -9,7 +8,6 @@ mongoose.connect('mongodb://localhost:27017/yourDatabaseName', {
 .then(() => {
     console.log('Connected to the database');
 
-    // Получение всех ингредиентов
     Ingredient.find()
         .then(ingredients => {
             console.log('Ингредиенты в базе данных:', ingredients);
@@ -18,7 +16,7 @@ mongoose.connect('mongodb://localhost:27017/yourDatabaseName', {
             console.error('Ошибка при получении ингредиентов:', err);
         })
         .finally(() => {
-            mongoose.connection.close(); // Закрываем соединение после завершения
+            mongoose.connection.close(); 
         });
 })
 .catch(err => {

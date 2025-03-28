@@ -47,10 +47,8 @@
     <button onclick="getSelectedIngredients()">Показать блюда</button>
 
     <script>
-        // Массив для хранения выбранных ингредиентов
         const selectedIngredientIds = [];
 
-        // Функция для переключения выбора ингредиента
         function toggleSelection(element) {
             const checkbox = element.querySelector('.hiddenCheckbox');
             checkbox.checked = !checkbox.checked;
@@ -67,7 +65,6 @@
             }
         }
 
-        // Функция для получения выбранных ингредиентов и отображения блюд
         function getSelectedIngredients() {
             fetch('/api/dishes', {
                 method: 'POST',
@@ -86,7 +83,7 @@
     </script>
 <style>
     .ingredientCard.selected {
-        background-color: #d3f3d3; /* Цвет для выбранной карточки */
+        background-color: #d3f3d3; 
     }
 </style>
     <script src="/scripts/menuCostructorScript.js"></script>

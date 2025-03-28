@@ -14,8 +14,8 @@ const dishSchema = new mongoose.Schema({
         required: false,
     },
     ingredients: [{
-        type: mongoose.Schema.Types.ObjectId, // Ссылка на объект ингредиента
-        ref: 'Ingredient', // Имя модели ингредиента
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Ingredient', 
         required: true,
     }]
 });

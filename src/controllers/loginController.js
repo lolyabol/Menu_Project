@@ -1,4 +1,3 @@
-// controllers/loginController.js
 import User from '../models/User.js';
 import bcrypt from 'bcrypt';
 
@@ -19,7 +18,6 @@ export const handleLogin = async (req, res) => {
     console.log('Password:', password);
     
     try {
-        // Исправлено: используем просто объект для поиска
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: 'Пользователь не найден' });
@@ -32,8 +30,7 @@ export const handleLogin = async (req, res) => {
             return res.status(400).json({ message: 'Неверный пароль' });
         }
 
-        // Сохранение информации о пользователе в сессии
-        req.session.userId = user._id; // Используем _id вместо id
+        req.session.userId = user._id; 
         req.session.email = user.email;
 
         res.redirect('/main'); 
