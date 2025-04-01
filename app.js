@@ -14,8 +14,10 @@ import cors from 'cors';
 import connectDB from './src/db.js'; 
 import registrationRouter from './src/routes/registrationRouter.js';
 import ingredientRoutes from './src/routes/ingredientRoutes.js';
+import userMenuRouter from './src/routes/userMenuRouter.js'
 import dishRoutes from './src/routes/dishRoutes.js';
 import morgan from 'morgan'; 
+import { isAuthenticated } from './src/middleware/authMiddleware.js'; 
 
 const app = express(); 
 const PORT = process.env.PORT || 3000;
@@ -64,6 +66,7 @@ app.use('/login', loginRouter);
 app.use('/main', mainRouter);
 app.use('/ingredients', ingredientRoutes);
 app.use('/dishes', dishRoutes); 
+app.use('/menu', isAuthenticated, userMenuRouter)
 
 app.use((req, res) => {
     res.status(404).send('Страница не найдена');

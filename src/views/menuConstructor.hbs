@@ -180,59 +180,86 @@
      }
 
      function renderDishes(dishes) {
-    const dishesContainer = document.getElementById('dishes-container');
-    dishesContainer.innerHTML = '';
+         const dishesContainer = document.getElementById('dishes-container');
+         dishesContainer.innerHTML = '';
 
-    if (dishes.length === 0) { 
-        dishesContainer.innerHTML = 'Нет блюд для выбранных ингредиентов.'; 
-        return; 
-    } 
+         if (dishes.length === 0) { 
+             dishesContainer.innerHTML = 'Нет блюд для выбранных ингредиентов.'; 
+             return; 
+         } 
 
-    console.log('Полученные блюда:', dishes); 
+         console.log('Полученные блюда:', dishes); 
 
-    dishes.forEach(dish => { 
-        const card = document.createElement('div'); 
-        card.className = 'dish-card'; 
+         dishes.forEach(dish => { 
+             const card = document.createElement('div'); 
+             card.className = 'dish-card'; 
 
-        const collapsedView = document.createElement('div');
-        
-        const mealTypeText = dish.mealType ? dish.mealType.charAt(0).toUpperCase() + dish.mealType.slice(1) : 'Неизвестный тип';
-        
-        collapsedView.innerHTML =
-            `<img src="${dish.imageURL}" alt="${dish.name}" style="max-height:100px;width:auto;border-radius:4px;margin-bottom:10px;" />  
-            <h3>${dish.name}</h3>
-            <p>Тип блюда: ${mealTypeText}</p>`; 
+             const collapsedView = document.createElement('div');
+             
+             const mealTypeText = dish.mealType ? dish.mealType.charAt(0).toUpperCase() + dish.mealType.slice(1) : 'Неизвестный тип';
+             
+             collapsedView.innerHTML =
+                 `<img src="${dish.imageURL}" alt="${dish.name}" style="max-height:100px;width:auto;border-radius=4px;margin-bottom=10px;" />  
+                 <h3>${dish.name}</h3>
+                 <p>Тип блюда: ${mealTypeText}</p>`; 
 
-        collapsedView.style.cursor = "pointer"; 
+             collapsedView.style.cursor = "pointer"; 
 
-        const detailsDiv = document.createElement('div');
-        detailsDiv.className = 'dish-details';
-        detailsDiv.style.display = 'none'; 
-        detailsDiv.innerHTML =
-            `<img src="${dish.imageURL}" alt="${dish.name}" style="max-height:100px;width:auto;border-radius=4px;margin-bottom=10px;" />
-            <p>Калории:${dish.calories}</p>  
-            <p>${dish.description || 'Описание отсутствует.'}</p>  
-            <h4>Рецепт:</h4>  
-            <p>${dish.recipe}</p>  
-            <h4>Ингредиенты:</h4>
-            <p>${dish.ingredientsList.map(item => `${item.quantity}г. ингредиента "${item.ingredientId.name}"`).join('<br>')}</p>`; 
+             const detailsDiv = document.createElement('div');
+             detailsDiv.className = 'dish-details';
+             detailsDiv.style.display = 'none'; 
+             
+              detailsDiv.innerHTML =
+                  `<img src="${dish.imageURL}" alt="${dish.name}" style="max-height=100px;width:auto;border-radius=4px;margin-bottom=10px;" />
+                  <p>Калории:${dish.calories}</p>  
+                  <p>${dish.description || 'Описание отсутствует.'}</p>  
+                  <h4>Рецепт:</h4>  
+                  <p>${dish.recipe}</p>  
+                  <h4>Ингредиенты:</h4>
+                  <p>${dish.ingredientsList.map(item => `${item.quantity}г. ингредиента "${item.ingredientId.name}"`).join('<br>')}</p>`; 
 
-        card.onclick = function() {
-            if (detailsDiv.style.display === 'none') { 
-                detailsDiv.style.display = 'block'; 
-                collapsedView.style.display = 'none'; 
-            } else { 
-                detailsDiv.style.display = 'none'; 
-                collapsedView.style.display = 'block'; 
-            }
-        };
+              const addButton = document.createElement('button');
+              addButton.textContent = 'Добавить';
+              addButton.onclick = async function(event) { 
+                  event.stopPropagation(); 
+                  await addDishToMenu(dish._id); 
+              };
 
-        card.appendChild(collapsedView); 
-        card.appendChild(detailsDiv); 
+              card.onclick = function() {
+                  if (detailsDiv.style.display === 'none') { 
+                      detailsDiv.style.display = 'block'; 
+                      collapsedView.style.display = 'none'; 
+                  } else { 
+                      detailsDiv.style.display = 'none'; 
+                      collapsedView.style.display = 'block'; 
+                  }
+              };
 
-        dishesContainer.appendChild(card); 
-    }); 
-}
+              card.appendChild(collapsedView); 
+              card.appendChild(detailsDiv); 
+              card.appendChild(addButton); 
+
+              dishesContainer.appendChild(card); 
+          }); 
+      }
+
+      async function addDishToMenu(dishId) { 
+          try {
+              const response = await fetch('/menu/addMenu', { 
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ dishId })
+              });
+
+              if (!response.ok) throw new Error(`Ошибка при добавлении блюда в меню:${response.statusText}`);
+
+              alert("Блюдо успешно добавлено в ваше меню!");
+          } catch (error) {
+              console.error("Ошибка:", error);
+              alert("Не удалось добавить блюдо в меню.");
+          }
+      }
+
       renderIngredients(); 
 
       document.getElementById('fetch-dishes').addEventListener('click', fetchDishes); 
