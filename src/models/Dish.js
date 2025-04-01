@@ -36,7 +36,12 @@ const dishSchema = new mongoose.Schema({
             type: Number,
             required: true, 
         }
-    }]
+    }],
+    mealType: { 
+        type: String,
+        enum: ['breakfast', 'lunch', 'dinner'], 
+        required: true
+    }
 });
 
 const Dish = mongoose.model('Dish', dishSchema);
