@@ -2,8 +2,7 @@ import User from '../models/User.js';
 import bcrypt from 'bcrypt';
 
 export const LoginPage = (req, res) => {
-    console.log("showLoginPage вызван");
-    res.render('login');
+       res.render('login');
 };
 
 export const handleLogin = async (req, res) => {

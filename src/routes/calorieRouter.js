@@ -1,16 +1,29 @@
 import express from 'express';
-import Dish from '../models/Dish.js';
+import User from '../models/User.js';
 
 const router = express.Router();
 
-router.get('/calorie-calculator', (req, res) => {
-    res.render('calorie-calculator', { title: 'Калькулятор калорий' });
-});
-
-router.post('/menu', async (req, res) => {
+router.post('/updateCalorieIntake', async (req, res) => {
     const { calories } = req.body;
-    const dishes = await Dish.findAll();
-    res.render('menu', { dishes, totalCalories: calories });
+
+    if (typeof calories !== 'number') {
+        return res.status(400).send({ message: 'Неверные данные' });
+    }
+
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).send({ message: 'Пользователь не найден' });
+        }
+
+        user.dailyCalorieIntake = calories;
+        await user.save(); 
+
+        res.status(200).send({ message: 'Данные успешно обновлены' });
+    } catch (error) {
+        console.error(error); 
+        res.status(500).send({ message: 'Ошибка при обновлении данных' });
+    }
 });
 
 export default router;

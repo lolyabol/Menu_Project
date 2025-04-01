@@ -2,6 +2,7 @@ import Ingredient from '../models/Ingredient.js';
 import Dish from '../models/Dish.js'; 
 
 export const MenuConstructorPage = async (req, res) => {
+    const user = req.user; 
     try {
         const ingredients = await Ingredient.find(); 
         
@@ -19,7 +20,7 @@ export const MenuConstructorPage = async (req, res) => {
         res.render('menuConstructor', { 
             ingredients: plainIngredients,
             dishes: matchingDishes 
-        });
+        }, { user });
     } catch (error) {
         console.error('Ошибка при получении ингредиентов или блюд:', error);
         res.status(500).send('Ошибка при загрузке страницы');

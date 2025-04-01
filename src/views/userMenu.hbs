@@ -4,6 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мое Меню</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        #user-menu-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px; /* Отступ между карточками */
+        }
+
+        .dish-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            width: 200px; /* Ширина карточки */
+        }
+
+        .dish-card img {
+            max-height: 100px;
+            width: auto;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .dish-card h3 {
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #2980b9; /* Цвет заголовка */
+        }
+
+        .dish-card p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .dish-card p:last-child {
+            font-style: italic; /* Курсив для описания */
+        }
+    </style>
 </head>
 <body>
     <h1>Ваше Меню</h1>
@@ -14,7 +66,7 @@
       async function fetchUserMenu() {
           try {
               const response = await fetch('/menu/getMenu');
-              if (!response.ok) throw new Error(`Ошибка при получении меню:${response.statusText}`);
+              if (!response.ok) throw new Error(`Ошибка при получении меню: ${response.statusText}`);
 
               const menu = await response.json();
               updateUserMenu(menu);
@@ -32,12 +84,12 @@
               const card = document.createElement('div');
               card.className = 'dish-card';
               
-              card.innerHTML = `
-                  <img src="${dish.imageURL}" alt="${dish.name}" style="max-height:100px;width:auto;border-radius=4px;margin-bottom=10px;" />
+              card.innerHTML = 
+                  `<img src="${dish.imageURL}" alt="${dish.name}" />
                   <h3>${dish.name}</h3>
-                  <p>Калории:${dish.calories}</p>
-                  <p>${dish.description || 'Описание отсутствует.'}</p>
-              `;
+                  <p>Калории: ${dish.calories}</p>
+                  <p>${dish.description || 'Описание отсутствует.'}</p>`
+              ;
               
               userMenuContainer.appendChild(card);
           });

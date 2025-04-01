@@ -14,6 +14,7 @@ import cors from 'cors';
 import connectDB from './src/db.js'; 
 import registrationRouter from './src/routes/registrationRouter.js';
 import ingredientRoutes from './src/routes/ingredientRoutes.js';
+import calorieRouter from './src/routes/calorieRouter.js'
 import userMenuRouter from './src/routes/userMenuRouter.js'
 import dishRoutes from './src/routes/dishRoutes.js';
 import morgan from 'morgan'; 
@@ -32,7 +33,11 @@ app.engine('hbs', engine({
     extname: '.hbs',
     defaultLayout: 'main',
     layoutsDir: join(__dirname, 'src/views/layouts/'),
-    partialsDir: join(__dirname, 'src/views/')
+    partialsDir: join(__dirname, 'src/views/'),
+    runtimeOptions: {
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true,
+    }
 }));
 
 app.set('view engine', 'hbs');
@@ -59,11 +64,35 @@ app.use((req, res, next) => {
 
 const { RegistrationPage } = registration; 
 app.get('/', RegistrationPage);
+app.post('/updateCalorieIntake', isAuthenticated, async (req, res) => {
+    const { calories } = req.body;
 
+    // Проверьте, что calories существует и является числом
+    if (typeof calories !== 'number') {
+        return res.status(400).send({ message: 'Неверные данные' });
+    }
+
+    try {
+        // Обновляем поле dailyCalorieIntake у текущего пользователя
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).send({ message: 'Пользователь не найден' });
+        }
+
+        user.dailyCalorieIntake = calories;
+        await user.save(); // Сохраняем изменения
+
+        res.status(200).send({ message: 'Данные успешно обновлены' });
+    } catch (error) {
+        console.error(error); // Выводим ошибку в консоль для отладки
+        res.status(500).send({ message: 'Ошибка при обновлении данных' });
+    }
+});
 
 app.use('/registration', registrationRouter);
 app.use('/login', loginRouter);
 app.use('/main', mainRouter);
+
 app.use('/ingredients', ingredientRoutes);
 app.use('/dishes', dishRoutes); 
 app.use('/menu', isAuthenticated, userMenuRouter)

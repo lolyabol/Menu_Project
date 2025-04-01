@@ -8,23 +8,30 @@
 </head>
 <body>
   <div class="header">
-<nav role="navigation">
-    <div id="menuToggle">
-      <input type="checkbox" id="menuCheckbox" />
-      <span></span>
-      <span></span>
-      <span></span>
-<ul id="menu">
-    <a href="/main/home"><li>Домой</li></a>
-    <a href="/main/about"><li>О нас</li></a>
-    <a href="/main/calorieCalculator"><li>Калькулятор калорий</li></a>
-    <a href="/main/menuConstructor"><li>Конструктор меню</li></a>
-    <a href="/main/userMenu"><li>Меню</li></a>
-</ul>
-    </div>
+    <nav role="navigation">
+      <div id="menuToggle">
+        <input type="checkbox" id="menuCheckbox" />
+        <span></span>
+        <span></span>
+        <span></span>
+        <ul id="menu">
+          <a href="/main/home"><li>Домой</li></a>
+          <a href="/main/about"><li>О нас</li></a>
+          <a href="/main/calorieCalculator"><li>Калькулятор калорий</li></a>
+          <a href="/main/menuConstructor"><li>Конструктор меню</li></a>
+          <a href="/main/userMenu"><li>Меню</li></a>
+          {{#if user}}
+        {{#if user.calorieCalculatorUsed}}
+            <li>Ваша суточная норма калорий: {{user.dailyCalorieIntake}} калорий</li>
+        {{else}}
+            <li>Ваша норма калорий ещё не известна, но это самый подходящий момент узнать её!</li>
+        {{/if}}
+    {{/if}}
+        </ul>
+      </div>
+    </nav>
   </div>
-  </nav>
-  </div>
+
   <main>
     {{{body}}}
   </main>

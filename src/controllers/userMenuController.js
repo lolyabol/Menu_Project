@@ -1,3 +1,4 @@
 export function UserMenuPage(req, res) {
-    res.render('userMenu'); 
+    const user = req.user; 
+       res.render('userMenu', { user });
 }

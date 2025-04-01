@@ -1,3 +1,4 @@
-export function CalorieCalculatorPage(_req, res) {
-    res.render('calorieCalculator'); 
+export function CalorieCalculatorPage(req, res) {
+    const user = req.user; 
+       res.render('calorieCalculator', { user });
 }

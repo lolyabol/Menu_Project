@@ -1,6 +1,5 @@
-
 export const AboutPage = (req, res) => {
-    console.log("Отображение страницы 'О нас'");
-    res.render('about'); 
+    const user = req.user; 
+       res.render('about', { user });
 };
 
