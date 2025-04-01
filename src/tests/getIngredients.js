@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import Ingredient from '../models/Ingredient'; 
+import Ingredient from '../models/Ingredient.js'; 
 
-mongoose.connect('mongodb://localhost:27017/yourDatabaseName', {
+mongoose.connect('mongodb://localhost:27017/MenuProjectDB', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })

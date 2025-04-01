@@ -1,8 +1,9 @@
-import express from 'express';
-import { addDish } from '../controllers/dishController.js';
+import { Router } from 'express';
+import { filterDishes, addDish } from '../controllers/dishController.js';
 
-const router = express.Router();
+const router = Router();
 
-router.post('/dishes', addDish);
+router.post('/filter', filterDishes);
+router.post('/add', addDish);
 
 export default router;

@@ -1,44 +1,44 @@
-import Dish from '../models/Dish.js';
+import { getDishesByIngredients } from '../services/dishService.js';
+import Dish from '../models/Dish.js'; 
+
+export const filterDishes = async (req, res) => {
+    const { ingredients } = req.body;
+
+    try {
+        const dishes = await getDishesByIngredients(ingredients);
+        res.json(dishes);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 export const addDish = async (req, res) => {
     try {
-        console.log('Полученные данные:', req.body); 
-        const { name, calories, description, ingredients } = req.body;
+        const { name, ingredients, calories, imageURL, description, recipe, ingredientsList } = req.body;
 
-        if (!name || !calories || !description || !ingredients) {
-            return res.status(400).json({ message: 'Имя, калории, описание и ингредиенты обязательны' });
+        if (!ingredients || ingredients.length === 0) {
+            return res.status(400).json({ message: 'Ингредиенты обязательны' });
         }
 
-        if (!Number.isInteger(calories)) {
-            return res.status(400).json({ message: 'Калории должны быть целым числом' });
+        if (!recipe || !ingredientsList || ingredientsList.length === 0) {
+            return res.status(400).json({ message: 'Рецепт обязателен и должен содержать инструкции и список ингредиентов' });
         }
-        
-        console.log('Проверенные данные:', { name, calories, description, ingredients });
 
-        const newDish = await Dish.create({ name, calories, description, ingredients });
-        
-        res.status(201).json(newDish);
+        const newDish = new Dish({
+            name,
+            ingredients,
+            calories,
+            imageURL,
+            description,
+            recipe,
+            ingredientsList,
+        });
+
+        await newDish.save();
+
+        res.status(201).json({ message: 'Блюдо добавлено', dish: newDish });
     } catch (error) {
-        console.error('Ошибка при добавлении блюда:', error.errors ? error.errors : error);
+        console.error('Ошибка при добавлении блюда:', error);
         res.status(500).json({ message: 'Ошибка при добавлении блюда', error: error.message });
     }
 };
-
-export const getDishesByIngredients = async (req, res) => {
-    try {
-        const { ingredientIds } = req.body;
-
-        if (!Array.isArray(ingredientIds) || ingredientIds.length === 0) {            
-            return res.status(400).json({ message: 'Необходимо передать массив идентификаторов ингредиентов' });
-    }
-
-    const dishes = await Dish.find({ 'ingredients.id': { $in: ingredientIds } });
-
-    res.json(dishes);
-} catch (error) {
-    console.error('Ошибка при получении блюд:', error);
-    res.status(500).json({ message: 'Ошибка при получении блюд' });
-}
-};
-
-

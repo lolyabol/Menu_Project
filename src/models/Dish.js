@@ -1,3 +1,4 @@
+// models/Dish.js
 import mongoose from 'mongoose';
 
 const dishSchema = new mongoose.Schema({
@@ -5,21 +6,38 @@ const dishSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    ingredients: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Ingredient', 
+    }],
     calories: {
         type: Number,
         required: true,
     },
-    description: {
+    imageURL: {
         type: String,
         required: false,
     },
-    ingredients: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Ingredient', 
+    description: { 
+        type: String,
+        required: false,
+    },
+    recipe: { 
+        type: String,
         required: true,
+    },
+    ingredientsList: [{ 
+        ingredientId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Ingredient',
+            required: true,
+        },
+        quantity: {
+            type: Number,
+            required: true, 
+        }
     }]
 });
 
 const Dish = mongoose.model('Dish', dishSchema);
-
 export default Dish;
