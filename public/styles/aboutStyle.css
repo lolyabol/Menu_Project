@@ -1,19 +1,26 @@
+html {
+    width: 100%;
+    height: 100%;
+}
 body {
     background-image: url('https://p0.zoon.ru/preview/VCPxxvNDCuc-SCH1g_BfNA/2400x1500x75/1/a/b/original_5d822d2b10de9a0dd9525928_625f5c5778aad4.87074274.jpg'); 
     background-size: cover; 
     background-repeat: no-repeat; 
     background-position: center;
+    font-size: 1.1em;
+}
+main {
     font-family: 'Nunito', sans-serif;
     color: #fff; 
     margin: 0; 
     padding: 0; 
-    height: 100vh; 
+    width: 100%;
+    height: 100%; 
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-
 h2 {
     color: #4CAF50;
 }
@@ -21,7 +28,8 @@ h3 {
     color: #4CAF50;
 }
 .container {
-    width: 80%;
+    width: 40%;
+    margin-top: 15%;
     background: transparent;
     padding: 20px;
     border-radius: 5px;

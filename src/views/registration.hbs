@@ -11,12 +11,9 @@
 
 <div class="container">
     <div class="container-welcome">
-        <div class="welcome">
-            <h2>Добро пожаловать!</h2>
-            <p>Зарегистрируйтесь, чтобы начать!</p>
-        </div>
-    </div>
-    <div class="form-container">
+        <h2>Добро пожаловать!</h2>
+        <p>Зарегистрируйтесь, чтобы начать!</p>
+        <hr> <!-- Добавление разделительной линии -->
         <h2>Регистрация</h2>
         <form id="registrationForm" action="/registration" method="POST">
             <label for="username">Имя пользователя:</label>
@@ -34,9 +31,8 @@
             <div class="goodMessage" id="success-message"></div>
         </form>
         <p>Есть аккаунт? <a href="/login">Войти</a></p>
-    </div>
+        </div> <!-- Закрытие контейнера -->
 </div>
 
 </body>
 </html>
-
