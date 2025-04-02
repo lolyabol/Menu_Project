@@ -71,3 +71,20 @@ export const removeDishFromMenu = async (req, res) => {
         res.status(500).send('Ошибка при удалении блюда из меню');
     }
 };
+export const getDishWithIngredients = async (req, res) => {
+    const { dishId } = req.params;
+
+    try {
+        const dish = await Dish.findById(dishId).populate('ingredientsList.ingredientId');
+
+        if (!dish) {
+            return res.status(404).json({ message: 'Блюдо не найдено' });
+        }
+
+        console.log('Полученное блюдо:', dish); // Отладочное сообщение
+        res.render('userMenu', { dish });
+    } catch (error) {
+        console.error('Ошибка при получении блюда:', error);
+        res.status(500).json({ message: error.message });
+    }
+};

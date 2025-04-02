@@ -61,6 +61,11 @@
             margin-top: 20px; 
             font-size: 1.2em; 
         }
+
+        #calorie-warning {
+            color: red; /* Цвет для предупреждения */
+            text-align: center; 
+        }
     </style>
 </head>
 <body>
@@ -68,6 +73,7 @@
     
     <div id="user-menu-container"></div>
     <div id="remaining-calories"></div> 
+    <p id="calorie-warning"></p> <!-- Новый элемент для предупреждения -->
 
 <script>
 async function fetchUserMenu() {
@@ -79,43 +85,66 @@ async function fetchUserMenu() {
         
         const data = await response.json();
         
-        if (Array.isArray(data.menu)) {
+        if (data && Array.isArray(data.menu)) {
             console.log('Меню пользователя:', data.menu);
             
             const menuContainer = document.getElementById('user-menu-container');
             menuContainer.innerHTML = ''; 
 
             for (const dish of data.menu) {
-                const dishWithIngredients = await populate(dish);
-                const menuItem = createDishCard(dishWithIngredients);
-                menuContainer.appendChild(menuItem);
+                if (!dish._id) { 
+                    console.error('Dish ID is missing:', dish);
+                    continue; 
+                }
+
+                console.log('Объект блюда перед вызовом populate:', dish); // Отладочный вывод
+
+                const dishWithIngredients = await populate(dish); 
+                if (dishWithIngredients) { // Проверяем, что dishWithIngredients не undefined
+                    const menuItem = createDishCard(dishWithIngredients);
+                    menuContainer.appendChild(menuItem);
+                }
             }
 
             displayRemainingCalories(data.remainingCalories);
             
         } else {
-            handleError('menu не является массивом:', data.menu);
+            handleError('menu не является массивом или отсутствует:', data.menu);
         }
     } catch (error) {
         handleError('Ошибка при получении меню:', error);
     }
 }
 
-async function populate(dish) {
-    try {
-        const response = await fetch(`/ingredients/getIngredients?dishId=${dish.id}`);
-        if (!response.ok) {
-            throw new Error(`Ошибка при получении ингредиентов для блюда ${dish.name}`);
-        }
+function formatIngredients(ingredientsList) {
+    if (!Array.isArray(ingredientsList) || ingredientsList.length === 0) {
+       return 'Ингредиенты отсутствуют.';
+   }
 
+   return ingredientsList.map(item => {
+       const ingredientName = item.ingredientId && item.ingredientId.name ? item.ingredientId.name : 'Неизвестный ингредиент';
+       return `${item.quantity}г. "${ingredientName}"`;
+   }).join('<br>');
+}
+
+async function populate(dish) {
+    if (!dish._id) {
+        console.error('ID блюда отсутствует:', dish);
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/ingredients/getIngredients?dishId=${dish._id}`);
+        if (!response.ok) {
+            throw new Error('Ошибка при получении ингредиентов');
+        }
+        
         const ingredientsData = await response.json();
+        console.log('Ингредиенты для блюда:', ingredientsData); // Отладочный вывод
         
-        dish.ingredientsList = ingredientsData.ingredients || [];
-        
-        return dish;
+        return { ...dish, ingredientsList: ingredientsData.ingredients };
     } catch (error) {
-        console.error(error);
-        return dish;
+        console.error('Ошибка при получении ингредиентов для блюда:', error);
     }
 }
 
@@ -132,27 +161,16 @@ function createDishCard(dish) {
         <p>${dish.recipe || 'Рецепт отсутствует.'}</p>
         <h4>Ингредиенты:</h4>
         <p>${formatIngredients(dish.ingredientsList)}</p>
-        <button class="remove-button" data-dish-id="${dish.id}">Удалить</button>
+        <button class="remove-button" data-dish-id="${dish._id}">Удалить</button>
     `;
 
     const removeButton = menuItem.querySelector('.remove-button');
     removeButton.addEventListener('click', (event) => {
         event.stopPropagation(); 
-        removeDishFromMenu(dish.id);
+        removeDishFromMenu(dish._id);
     });
 
     return menuItem;
-}
-
-function formatIngredients(ingredientsList) {
-    if (!Array.isArray(ingredientsList) || ingredientsList.length === 0) {
-       return 'Ингредиенты отсутствуют.';
-   }
-
-   return ingredientsList.map(item => {
-       const ingredientName = item.ingredientId && item.ingredientId.name ? item.ingredientId.name : 'Неизвестный ингредиент';
-       return `${item.quantity}г. ингредиента "${ingredientName}"`;
-   }).join('<br>');
 }
 
 function handleError(message, error) {
@@ -183,6 +201,13 @@ async function removeDishFromMenu(dishId) {
 function displayRemainingCalories(remainingCalories) {
    const remainingCaloriesDiv = document.getElementById('remaining-calories');
    remainingCaloriesDiv.innerHTML = `<h2>Осталось калорий до суточной нормы: ${remainingCalories} ккал</h2>`;
+   
+   const calorieWarning = document.getElementById('calorie-warning');
+   if (remainingCalories < 0) { // Проверка на превышение нормы
+       calorieWarning.innerHTML = 'Внимание! Вы превысили свою суточную норму калорий.';
+   } else {
+       calorieWarning.innerHTML = ''; // Скрыть предупреждение, если норма не превышена
+   }
 }
 
 document.addEventListener('DOMContentLoaded', fetchUserMenu);

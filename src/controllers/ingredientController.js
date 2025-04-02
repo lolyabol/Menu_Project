@@ -41,3 +41,26 @@ export const addIngredients = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+export const getIngredientsByDishId = async (req, res) => {
+    const { dishId } = req.query; // Получаем dishId из параметров запроса
+
+    if (!dishId) {
+        return res.status(400).json({ message: 'dishId is required' });
+    }
+
+    try {
+        // Здесь вы должны реализовать логику для получения ингредиентов по dishId
+        // Например, если у вас есть связь между блюдами и ингредиентами:
+        const ingredients = await Ingredient.find({ dishId }); // Предполагается, что у вас есть поле dishId в модели Ingredient
+
+        if (!ingredients) {
+            return res.status(404).json({ message: 'Ингредиенты не найдены' });
+        }
+
+        res.json({ ingredients });
+    } catch (error) {
+        console.error('Ошибка при получении ингредиентов:', error);
+        res.status(500).json({ message: error.message });
+    }
+};

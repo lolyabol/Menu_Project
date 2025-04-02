@@ -17,9 +17,6 @@ router.get('/calorieCalculator', isAuthenticated, CalorieCalculatorPage);
 router.get('/menuConstructor', isAuthenticated, checkCalorieCalculator, MenuConstructorPage);
 router.get('/userMenu', isAuthenticated, UserMenuPage);
 
-router.get('/ingredient', (req, res) => {
-    res.send('Страница ингредиентов'); 
-});
 
 router.get('/home', isAuthenticated, HomePage);
 
