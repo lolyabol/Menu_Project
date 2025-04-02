@@ -8,13 +8,13 @@ import { dirname, join } from 'path';
 import registration from './src/controllers/registrationController.js';
 import loginRouter from './src/routes/loginRouter.js';
 import mainRouter from './src/routes/mainRouter.js';
+import calorieRouter from './src/routes/calorieRouter.js';
 import crypto from 'crypto';
 import Ingredient from './src/models/Ingredient.js';
 import cors from 'cors'; 
 import connectDB from './src/db.js'; 
 import registrationRouter from './src/routes/registrationRouter.js';
 import ingredientRoutes from './src/routes/ingredientRoutes.js';
-import calorieRouter from './src/routes/calorieRouter.js'
 import userMenuRouter from './src/routes/userMenuRouter.js'
 import dishRoutes from './src/routes/dishRoutes.js';
 import morgan from 'morgan'; 
@@ -64,33 +64,11 @@ app.use((req, res, next) => {
 
 const { RegistrationPage } = registration; 
 app.get('/', RegistrationPage);
-app.post('/updateCalorieIntake', isAuthenticated, async (req, res) => {
-    const { calories } = req.body;
-
-    if (typeof calories !== 'number') {
-        return res.status(400).send({ message: 'Неверные данные' });
-    }
-
-    try {
-        const user = await User.findById(req.user._id);
-        if (!user) {
-            return res.status(404).send({ message: 'Пользователь не найден' });
-        }
-
-        user.dailyCalorieIntake = calories;
-        await user.save();
-
-        res.status(200).send({ message: 'Данные успешно обновлены' });
-    } catch (error) {
-        console.error(error); 
-        res.status(500).send({ message: 'Ошибка при обновлении данных' });
-    }
-});
 
 app.use('/registration', registrationRouter);
 app.use('/login', loginRouter);
 app.use('/main', mainRouter);
-
+app.use('/', isAuthenticated, calorieRouter)
 app.use('/ingredients', ingredientRoutes);
 app.use('/dishes', dishRoutes); 
 app.use('/menu', isAuthenticated, userMenuRouter)

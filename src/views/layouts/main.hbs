@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles/mainStyle.css">
 </head>
 <body>
@@ -21,12 +22,11 @@
           <a href="/main/menuConstructor"><li>Конструктор меню</li></a>
           <a href="/main/userMenu"><li>Меню</li></a>
           {{#if user}}
-        {{#if user.calorieCalculatorUsed}}
-            <p class="calorieNormP">Ваша суточная норма калорий: {{user.dailyCalorieIntake}} калорий</p>
-        {{else}}
-            <p class="calorieNormP">Ваша норма калорий ещё не известна, но это самый подходящий момент узнать её!</p>
-        {{/if}}
-    {{/if}}
+          <div class=""></div>
+    <p class="calorieNormP">Ваша суточная норма калорий: {{user.dailyCalorieIntake}} калорий</p>
+{{else}}
+    <p class="calorieNormP">Ваша норма калорий ещё не известна, но это самый подходящий момент узнать её!</p>
+{{/if}}
         </ul>
       </div>
     </nav>
@@ -35,5 +35,6 @@
   <main>
     {{{body}}}
   </main>
+  <script src="/scripts/mainScript.js"></script>
 </body>
 </html>

@@ -1,10 +1,15 @@
-
-document.getElementById("calculateCalories").addEventListener("click", function() {
+document.getElementById("calculateCalories").addEventListener("click", async function() {
     const weight = parseFloat(document.getElementById("weightInput").value);
     const height = parseFloat(document.getElementById("heightInput").value);
     const age = parseInt(document.getElementById("ageInput").value);
     const gender = document.getElementById("gender").value;
     const activityLevel = parseFloat(document.getElementById("activityLevel").value);
+    const goal = document.getElementById("goal").value;
+
+    if (!weight || !height || !age || !gender || !activityLevel || !goal) {
+        alert("Пожалуйста, заполните все поля.");
+        return;
+    }
 
     let bmr;
 
@@ -14,8 +19,28 @@ document.getElementById("calculateCalories").addEventListener("click", function(
         bmr = 10 * weight + 6.25 * height - 5 * age - 161;
     }
 
-    const calories = bmr * activityLevel;
+    let calories = bmr * activityLevel;
 
-    document.getElementById("calorieResult").textContent = `Ваша суточная норма калорий: ${Math.round(calories)} калорий`;
+    if (goal === "lose") {
+        calories -= 500; 
+    } else if (goal === "gain") {
+        calories += 500; 
+    }
+
+    try {
+        const response = await fetch('/updateCalorieIntake', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ calories: Math.round(calories) })
+        });
+
+        if (!response.ok) throw new Error('Ошибка при обновлении данных');
+
+        document.getElementById("calorieResult").textContent = `Ваша суточная норма калорий: ${Math.round(calories)} калорий`;
+    } catch (error) {
+        console.error("Ошибка:", error);
+        alert("Не удалось сохранить данные.");
+    }
 });
-

@@ -1,6 +1,6 @@
 body {
     background-color: #79c273; 
-    font-family: Arial, sans-serif;
+    font-family: 'Nunito', sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
@@ -26,7 +26,7 @@ body {
     background: white;
     border-radius: 10px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    padding: 5% 3%; 
+    padding: 5%;
     width: 100%; 
     max-width: 600px; 
 }
@@ -36,12 +36,8 @@ body {
     margin-bottom: 20px;
 }
 
-h1 {
-    color: #333; 
-}
-
 h2 {
-    color: #333; 
+    color: #333;
 }
 
 label {
@@ -50,9 +46,10 @@ label {
     color: #555;
 }
 
+input[type="text"],
 input[type="email"],
 input[type="password"] {
-    width: 96.3%;
+    width: 100%;
     padding: 10px;
     margin-top: 5px;
     border: 1px solid #ccc;

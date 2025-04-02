@@ -3,7 +3,7 @@ main{
 }
 body {
     height: 100%;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Nunito', sans-serif;
     background: url('https://static.103.by/images/common/wysiwyg/2022/04/4950512b7a854b228e2607802d4d3b54.jpg');
     color: #6a4f4b;
     display: flex;

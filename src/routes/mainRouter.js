@@ -6,10 +6,13 @@ import { MenuConstructorPage } from '../controllers/menuConstructorController.js
 import { UserMenuPage } from '../controllers/userMenuController.js';
 import { isAuthenticated } from '../middleware/authMiddleware.js'; 
 import checkCalorieCalculator from '../middleware/checkCalorieCalculator.js'
+import User from '../models/User.js';
 
 const router = Router();
 router.get('/main', isAuthenticated, async (req, res) => {
-    res.render('main', { user: req.user }); 
+    const user = await User.findById(req.user._id);
+    console.log(user);
+    res.render('main', { user });
 });
 router.get('/', isAuthenticated, HomePage); 
 router.get('/about', isAuthenticated, AboutPage);
