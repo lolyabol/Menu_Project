@@ -67,24 +67,22 @@ app.get('/', RegistrationPage);
 app.post('/updateCalorieIntake', isAuthenticated, async (req, res) => {
     const { calories } = req.body;
 
-    // Проверьте, что calories существует и является числом
     if (typeof calories !== 'number') {
         return res.status(400).send({ message: 'Неверные данные' });
     }
 
     try {
-        // Обновляем поле dailyCalorieIntake у текущего пользователя
         const user = await User.findById(req.user._id);
         if (!user) {
             return res.status(404).send({ message: 'Пользователь не найден' });
         }
 
         user.dailyCalorieIntake = calories;
-        await user.save(); // Сохраняем изменения
+        await user.save();
 
         res.status(200).send({ message: 'Данные успешно обновлены' });
     } catch (error) {
-        console.error(error); // Выводим ошибку в консоль для отладки
+        console.error(error); 
         res.status(500).send({ message: 'Ошибка при обновлении данных' });
     }
 });

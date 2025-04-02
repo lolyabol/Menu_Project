@@ -19,8 +19,10 @@ export const MenuConstructorPage = async (req, res) => {
 
         res.render('menuConstructor', { 
             ingredients: plainIngredients,
-            dishes: matchingDishes 
-        }, { user });
+            dishes: matchingDishes,
+            user // Передаем пользователя в том же объекте
+        });
+        
     } catch (error) {
         console.error('Ошибка при получении ингредиентов или блюд:', error);
         res.status(500).send('Ошибка при загрузке страницы');

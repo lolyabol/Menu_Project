@@ -22,7 +22,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 20px; /* Отступ между карточками */
+            gap: 20px; 
         }
 
         .dish-card {
@@ -31,7 +31,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 15px;
             text-align: center;
-            width: 200px; /* Ширина карточки */
+            width: 200px; 
         }
 
         .dish-card img {
@@ -44,7 +44,7 @@
         .dish-card h3 {
             font-size: 1.2em;
             margin: 10px 0;
-            color: #2980b9; /* Цвет заголовка */
+            color: #2980b9; 
         }
 
         .dish-card p {
@@ -53,7 +53,13 @@
         }
 
         .dish-card p:last-child {
-            font-style: italic; /* Курсив для описания */
+            font-style: italic;
+        }
+
+        #remaining-calories {
+            text-align: center;
+            margin-top: 20px; 
+            font-size: 1.2em; 
         }
     </style>
 </head>
@@ -61,41 +67,126 @@
     <h1>Ваше Меню</h1>
     
     <div id="user-menu-container"></div>
+    <div id="remaining-calories"></div> 
 
-    <script>
-      async function fetchUserMenu() {
-          try {
-              const response = await fetch('/menu/getMenu');
-              if (!response.ok) throw new Error(`Ошибка при получении меню: ${response.statusText}`);
+<script>
+async function fetchUserMenu() {
+    try {
+        const response = await fetch('/menu/getMenu');
+        if (!response.ok) {
+            throw new Error('Ошибка при получении меню');
+        }
+        
+        const data = await response.json();
+        
+        if (Array.isArray(data.menu)) {
+            console.log('Меню пользователя:', data.menu);
+            
+            const menuContainer = document.getElementById('user-menu-container');
+            menuContainer.innerHTML = ''; 
 
-              const menu = await response.json();
-              updateUserMenu(menu);
-          } catch (error) {
-              console.error("Ошибка:", error);
-              alert("Не удалось загрузить ваше меню.");
-          }
-      }
+            for (const dish of data.menu) {
+                const dishWithIngredients = await populate(dish);
+                const menuItem = createDishCard(dishWithIngredients);
+                menuContainer.appendChild(menuItem);
+            }
 
-      function updateUserMenu(menu) {
-          const userMenuContainer = document.getElementById('user-menu-container');
-          userMenuContainer.innerHTML = '';
+            displayRemainingCalories(data.remainingCalories);
+            
+        } else {
+            handleError('menu не является массивом:', data.menu);
+        }
+    } catch (error) {
+        handleError('Ошибка при получении меню:', error);
+    }
+}
 
-          menu.forEach(dish => {
-              const card = document.createElement('div');
-              card.className = 'dish-card';
-              
-              card.innerHTML = 
-                  `<img src="${dish.imageURL}" alt="${dish.name}" />
-                  <h3>${dish.name}</h3>
-                  <p>Калории: ${dish.calories}</p>
-                  <p>${dish.description || 'Описание отсутствует.'}</p>`
-              ;
-              
-              userMenuContainer.appendChild(card);
-          });
-      }
+async function populate(dish) {
+    try {
+        const response = await fetch(`/ingredients/getIngredients?dishId=${dish.id}`);
+        if (!response.ok) {
+            throw new Error(`Ошибка при получении ингредиентов для блюда ${dish.name}`);
+        }
 
-      fetchUserMenu(); 
-    </script>
+        const ingredientsData = await response.json();
+        
+        dish.ingredientsList = ingredientsData.ingredients || [];
+        
+        return dish;
+    } catch (error) {
+        console.error(error);
+        return dish;
+    }
+}
+
+function createDishCard(dish) {
+    const menuItem = document.createElement('div');
+    menuItem.className = 'dish-card';
+
+    menuItem.innerHTML = `
+        <img src="${dish.imageURL || 'default-image.jpg'}" alt="${dish.name || 'Блюдо'}" />
+        <h3>${dish.name || 'Неизвестное блюдо'}</h3>
+        <p>Калории: ${dish.calories || 'Не указано'}</p>
+        <p>${dish.description || 'Описание отсутствует.'}</p>
+        <h4>Рецепт:</h4>
+        <p>${dish.recipe || 'Рецепт отсутствует.'}</p>
+        <h4>Ингредиенты:</h4>
+        <p>${formatIngredients(dish.ingredientsList)}</p>
+        <button class="remove-button" data-dish-id="${dish.id}">Удалить</button>
+    `;
+
+    const removeButton = menuItem.querySelector('.remove-button');
+    removeButton.addEventListener('click', (event) => {
+        event.stopPropagation(); 
+        removeDishFromMenu(dish.id);
+    });
+
+    return menuItem;
+}
+
+function formatIngredients(ingredientsList) {
+    if (!Array.isArray(ingredientsList) || ingredientsList.length === 0) {
+       return 'Ингредиенты отсутствуют.';
+   }
+
+   return ingredientsList.map(item => {
+       const ingredientName = item.ingredientId && item.ingredientId.name ? item.ingredientId.name : 'Неизвестный ингредиент';
+       return `${item.quantity}г. ингредиента "${ingredientName}"`;
+   }).join('<br>');
+}
+
+function handleError(message, error) {
+   console.error(message, error);
+   const menuContainer = document.getElementById('user-menu-container');
+   menuContainer.innerHTML = '<p>Произошла ошибка при загрузке меню. Попробуйте позже.</p>';
+}
+
+async function removeDishFromMenu(dishId) {
+   try {
+       const response = await fetch(`/menu/removeDish/${dishId}`, { 
+           method: 'DELETE'
+       });
+
+       if (!response.ok) {
+           throw new Error(`Ошибка при удалении блюда: ${response.statusText}`);
+       }
+
+       fetchUserMenu();
+       
+       alert("Блюдо успешно удалено из меню!");
+   } catch (error) {
+       console.error("Ошибка:", error);
+       alert("Не удалось удалить блюдо из меню.");
+   }
+}
+
+function displayRemainingCalories(remainingCalories) {
+   const remainingCaloriesDiv = document.getElementById('remaining-calories');
+   remainingCaloriesDiv.innerHTML = `<h2>Осталось калорий до суточной нормы: ${remainingCalories} ккал</h2>`;
+}
+
+document.addEventListener('DOMContentLoaded', fetchUserMenu);
+</script>
+
 </body>
 </html>

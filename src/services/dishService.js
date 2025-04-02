@@ -16,7 +16,11 @@ export const getDishesByIngredients = async (ingredients, mealType) => {
             query.mealType = mealType;
         }
 
-        const dishes = await Dish.find(query).populate('ingredientsList.ingredientId');
+        const dishes = await Dish.find(query)
+            .populate({
+                path: 'ingredientsList.ingredientId',
+                select: 'name' 
+            });
 
         return dishes;
     } catch (error) {

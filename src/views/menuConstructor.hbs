@@ -210,13 +210,15 @@
              detailsDiv.style.display = 'none'; 
              
               detailsDiv.innerHTML =
-                  `<img src="${dish.imageURL}" alt="${dish.name}" style="max-height=100px;width:auto;border-radius=4px;margin-bottom=10px;" />
-                  <p>Калории:${dish.calories}</p>  
-                  <p>${dish.description || 'Описание отсутствует.'}</p>  
-                  <h4>Рецепт:</h4>  
-                  <p>${dish.recipe}</p>  
-                  <h4>Ингредиенты:</h4>
-                  <p>${dish.ingredientsList.map(item => `${item.quantity}г. ингредиента "${item.ingredientId.name}"`).join('<br>')}</p>`; 
+    `<img src="${dish.imageURL}" alt="${dish.name}" style="max-height:100px;width:auto;border-radius=4px;margin-bottom=10px;" />
+    <p>Калории: ${dish.calories}</p>  
+    <p>${dish.description || 'Описание отсутствует.'}</p>  
+    <h4>Рецепт:</h4>  
+    <p>${dish.recipe}</p>  
+    <h4>Ингредиенты:</h4>
+    <p>${Array.isArray(dish.ingredientsList) && dish.ingredientsList.length > 0 
+        ? dish.ingredientsList.map(item => `${item.quantity}г. ингредиента "${item.ingredientId.name}"`).join('<br>')
+        : 'Ингредиенты отсутствуют.'}</p>`; 
 
               const addButton = document.createElement('button');
               addButton.textContent = 'Добавить';
@@ -244,22 +246,22 @@
       }
 
       async function addDishToMenu(dishId) { 
-          try {
-              const response = await fetch('/menu/addMenu', { 
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ dishId })
-              });
+    try {
+        const response = await fetch('/menu/addMenu', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ dishId }) 
+        });
 
-              if (!response.ok) throw new Error(`Ошибка при добавлении блюда в меню:${response.statusText}`);
+        if (!response.ok) throw new Error(`Ошибка при добавлении блюда в меню: ${response.statusText}`);
 
-              alert("Блюдо успешно добавлено в ваше меню!");
-          } catch (error) {
-              console.error("Ошибка:", error);
-              alert("Не удалось добавить блюдо в меню.");
-          }
-      }
-
+        const data = await response.json();
+        alert(data.message); 
+    } catch (error) {
+        console.error("Ошибка:", error);
+        alert("Не удалось добавить блюдо в меню.");
+    }
+}
       renderIngredients(); 
 
       document.getElementById('fetch-dishes').addEventListener('click', fetchDishes); 

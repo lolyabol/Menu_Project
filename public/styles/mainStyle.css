@@ -17,7 +17,11 @@ p {
   font-size: 18px;
   line-height: 28px;
 }
-
+.calorieNormP {
+  font-size: 1em;
+  color: #217916;
+  font-weight: bold;
+}
 * {
   scroll-behavior: smooth;
 }

@@ -22,9 +22,9 @@
           <a href="/main/userMenu"><li>Меню</li></a>
           {{#if user}}
         {{#if user.calorieCalculatorUsed}}
-            <li>Ваша суточная норма калорий: {{user.dailyCalorieIntake}} калорий</li>
+            <p class="calorieNormP">Ваша суточная норма калорий: {{user.dailyCalorieIntake}} калорий</p>
         {{else}}
-            <li>Ваша норма калорий ещё не известна, но это самый подходящий момент узнать её!</li>
+            <p class="calorieNormP">Ваша норма калорий ещё не известна, но это самый подходящий момент узнать её!</p>
         {{/if}}
     {{/if}}
         </ul>
