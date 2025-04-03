@@ -27,6 +27,8 @@ document.getElementById("calculateCalories").addEventListener("click", async fun
         calories += 500; 
     }
 
+    const weeklyCalories = Math.round(calories * 7);
+
     try {
         const response = await fetch('/updateCalorieIntake', {
             method: 'POST',
@@ -38,7 +40,9 @@ document.getElementById("calculateCalories").addEventListener("click", async fun
 
         if (!response.ok) throw new Error('Ошибка при обновлении данных');
 
-        document.getElementById("calorieResult").textContent = `Ваша суточная норма калорий: ${Math.round(calories)} калорий`;
+        document.getElementById("calorieResult").innerHTML = 
+    `Ваша суточная норма калорий: ${Math.round(calories)} калорий.<br>Ваша недельная норма калорий: ${weeklyCalories} калорий.`;
+
     } catch (error) {
         console.error("Ошибка:", error);
         alert("Не удалось сохранить данные.");

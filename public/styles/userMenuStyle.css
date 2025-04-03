@@ -26,8 +26,8 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: flex-start; /* Изменено на flex-start для выравнивания элементов по верхнему краю */
-    overflow-y: auto; /* Включение вертикальной прокрутки */
+    align-items: flex-start; 
+    overflow-y: auto; 
 }
 
 #user-menu-container::-webkit-scrollbar {

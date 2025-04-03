@@ -1,5 +1,6 @@
 import { getAllIngredients } from '../services/ingredientService.js';
 import Ingredient from '../models/Ingredient.js'; 
+import Dish from '../models/Dish.js';
 
 export const fetchAllIngredients = async (req, res) => {
     try {
@@ -43,22 +44,20 @@ export const addIngredients = async (req, res) => {
 };
 
 export const getIngredientsByDishId = async (req, res) => {
-    const { dishId } = req.query; // Получаем dishId из параметров запроса
+    const { dishId } = req.query; 
 
     if (!dishId) {
         return res.status(400).json({ message: 'dishId is required' });
     }
 
     try {
-        // Здесь вы должны реализовать логику для получения ингредиентов по dishId
-        // Например, если у вас есть связь между блюдами и ингредиентами:
-        const ingredients = await Ingredient.find({ dishId }); // Предполагается, что у вас есть поле dishId в модели Ingredient
+        const dish = await Dish.findById(dishId).populate('ingredients');
 
-        if (!ingredients) {
-            return res.status(404).json({ message: 'Ингредиенты не найдены' });
+        if (!dish) {
+            return res.status(404).json({ message: 'Блюдо не найдено' });
         }
 
-        res.json({ ingredients });
+        res.json({ ingredients: dish.ingredientsList });
     } catch (error) {
         console.error('Ошибка при получении ингредиентов:', error);
         res.status(500).json({ message: error.message });

@@ -1,5 +1,16 @@
 import { getDishesByIngredients } from '../services/dishService.js';
 import Dish from '../models/Dish.js'; 
+import Ingredient from '../models/Ingredient.js';
+
+export const renderMenuPage = async (req, res) => {
+    try {
+        const ingredients = await Ingredient.find(); 
+        res.render('menu', { ingredients });
+    } catch (error) {
+        console.error('Ошибка при рендеринге страницы меню:', error);
+        res.status(500).send('Ошибка при загрузке страницы меню');
+    }
+};
 
 export const filterDishes = async (req, res) => {
     const mealType = req.body.mealType; 

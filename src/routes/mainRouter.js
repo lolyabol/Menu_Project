@@ -18,6 +18,9 @@ router.get('/', isAuthenticated, HomePage);
 router.get('/about', isAuthenticated, AboutPage);
 router.get('/calorieCalculator', isAuthenticated, CalorieCalculatorPage);
 router.get('/menuConstructor', isAuthenticated, checkCalorieCalculator, MenuConstructorPage);
+router.get('/dishTemplate', (req, res) => {
+    res.render('templates/dishTemplate');
+});
 router.get('/userMenu', isAuthenticated, UserMenuPage);
 
 

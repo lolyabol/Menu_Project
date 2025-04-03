@@ -1,55 +1,61 @@
 import User from '../models/User.js';
 import Dish from '../models/Dish.js';
+import Menu from '../models/Menu.js';
 
 export const addDishToMenu = async (req, res) => {
     const userId = req.user._id; 
     const { dishId } = req.body;
 
     try {
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({ message: 'Пользователь не найден' });
-        }
+        console.log('userId:', userId);
+        console.log('dishId:', dishId);
 
         const dish = await Dish.findById(dishId);
         if (!dish) {
             return res.status(404).json({ message: 'Блюдо не найдено' });
         }
 
-        if (!user.menu.includes(dish._id)) { 
-            user.menu.push(dish._id);
-            await user.save();
-            return res.status(200).json({ message: 'Блюдо добавлено в меню', menu: user.menu });
+        let menu = await Menu.findOne({ userId });
+        
+        if (!menu) {
+            menu = new Menu({
+                userId,
+                dishes: [dish._id],
+            });
+            await menu.save();
+            return res.status(201).json({ message: 'Меню создано и блюдо добавлено', menu });
         } else {
-            return res.status(400).json({ message: 'Блюдо уже добавлено в меню' });
+            if (!menu.dishes.includes(dish._id)) {
+                menu.dishes.push(dish._id);
+                await menu.save();
+                return res.status(200).json({ message: 'Блюдо добавлено в меню', menu });
+            } else {
+                return res.status(400).json({ message: 'Блюдо уже добавлено в меню' });
+            }
         }
     } catch (error) {
-        console.error('Ошибка при добавлении блюда в меню:', error);
-        return res.status(500).json({ message: 'Ошибка при добавлении блюда в меню', error });
+        console.error('Ошибка при добавлении блюда в меню:', error.message);
+        return res.status(500).json({ message: 'Ошибка при добавлении блюда в меню', error: error.message });
     }
 };
 
 export const getUserMenu = async (req, res) => {
+    console.log('Запрос на получение меню');
+    const userId = req.user._id; 
+
     try {
-        const user = await User.findById(req.user._id).populate('menu'); 
-        if (!user) {
-            return res.status(404).json({ message: 'Пользователь не найден' });
+        const menu = await Menu.findOne({ userId }).populate('dishes');
+
+        if (!menu) {
+            return res.status(404).json({ message: 'Меню не найдено' });
         }
 
-        const totalCalories = user.menu.reduce((sum, dish) => sum + dish.calories, 0);
-        
-        const remainingCalories = user.dailyCalorieIntake - totalCalories;
-
-        res.status(200).json({
-            menu: user.menu,
-            remainingCalories: remainingCalories,
-        });
+        res.json({ menu: { ...menu._doc, dishes: menu.dishes } });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Ошибка сервера', error });
+        console.error('Ошибка при получении меню:', error);
+        res.status(500).json({ message: 'Ошибка при получении меню' });
     }
 };
-
 
 export const removeDishFromMenu = async (req, res) => {
     const dishId = req.params.id;
@@ -60,10 +66,15 @@ export const removeDishFromMenu = async (req, res) => {
         if (!user) {
             return res.status(404).send('Пользователь не найден');
         }
+        const menu = await Menu.findOne({ userId: user._id });
 
-        user.menu = user.menu.filter(dish => dish.toString() !== dishId);
+        if (!menu) {
+            return res.status(404).send('Меню не найдено');
+        }
 
-        await user.save();
+        menu.dishes = menu.dishes.filter(dish => dish.toString() !== dishId);
+        
+        await menu.save();
 
         res.status(200).send('Блюдо успешно удалено из меню');
     } catch (error) {
@@ -71,20 +82,26 @@ export const removeDishFromMenu = async (req, res) => {
         res.status(500).send('Ошибка при удалении блюда из меню');
     }
 };
-export const getDishWithIngredients = async (req, res) => {
-    const { dishId } = req.params;
 
+export const getDishById = async (req, res) => {
     try {
-        const dish = await Dish.findById(dishId).populate('ingredientsList.ingredientId');
+        const dish = await Dish.findById(req.params.id)
+            .populate('ingredients')
+            .exec();
 
         if (!dish) {
             return res.status(404).json({ message: 'Блюдо не найдено' });
         }
 
-        console.log('Полученное блюдо:', dish); // Отладочное сообщение
-        res.render('userMenu', { dish });
+        const ingredientsList = dish.ingredients.map(ingredient => ({
+            ingredientId: ingredient._id,
+            ingredientName: ingredient.name, 
+            quantity: ingredient.quantity
+        }));
+
+        res.json({ ...dish.toObject(), ingredientsList });
     } catch (error) {
         console.error('Ошибка при получении блюда:', error);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Ошибка сервера' });
     }
 };

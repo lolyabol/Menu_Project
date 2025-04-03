@@ -32,6 +32,10 @@ const dishSchema = new mongoose.Schema({
             ref: 'Ingredient',
             required: true,
         },
+        ingredientName: { 
+            type: String,
+            required: true,
+        },
         quantity: {
             type: Number,
             required: true, 
@@ -41,7 +45,10 @@ const dishSchema = new mongoose.Schema({
         type: String,
         enum: ['breakfast', 'lunch', 'dinner'], 
         required: true
-    }
+    },
+    dayOfWeek: { 
+        type: String, 
+        enum: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] }
 });
 
 const Dish = mongoose.model('Dish', dishSchema);
