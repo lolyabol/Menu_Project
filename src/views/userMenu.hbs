@@ -20,8 +20,8 @@
 
 #user-menu-container {
     width: auto;
-    max-width: 30vw; /* Фиксированная ширина */
-    max-height: 70vh; /* Максимальная высота */
+    max-width: 30vw;
+    max-height: 70vh;
     padding: 25px;
     margin-top: 20px;
     background: rgba(255, 255, 255, 0.6);
@@ -137,45 +137,45 @@ async function fetchUserMenu() {
     try {
         const response = await fetch('/menu/getMenu');
         if (!response.ok) {
-           throw new Error('Ошибка при получении меню');
-       }
-        
-       const data = await response.json();
-        
-       const menuContainer = document.getElementById('user-menu-container');
-       menuContainer.innerHTML = ''; 
-
-       if (data && data.menu && Array.isArray(data.menu.dishes)) {
-    console.log('Меню пользователя:', data.menu.dishes);
-    
-    if (data.menu.dishes.length === 0) {
-        menuContainer.innerHTML = '<p>Ой, Ваше меню пока пусто :(</p>';
-        return;
-    }
-
-    for (const dish of data.menu.dishes) {
-        if (!dish._id) { 
-            console.error('Dish ID is missing:', dish);
-            continue; 
+            throw new Error('Ошибка при получении меню');
         }
+        
+        const data = await response.json();
+        
+        const menuContainer = document.getElementById('user-menu-container');
+        menuContainer.innerHTML = ''; 
 
-        console.log('Объект блюда перед вызовом populate:', dish); 
-
-        const dishWithIngredients = await populate(dish); 
-        if (dishWithIngredients) {
-            const menuItem = createDishCard(dishWithIngredients);
-            menuContainer.appendChild(menuItem);
-        }
-    }
-
-           displayRemainingCalories(data.remainingCalories);
+        if (data && data.menu && Array.isArray(data.menu.dishes)) {
+            console.log('Меню пользователя:', data.menu.dishes);
             
-       } else {
-           handleError('menu не является массивом или отсутствует:', data.menu);
-       }
-   } catch (error) {
-       handleError('Ошибка при получении меню:', error);
-   }
+            if (data.menu.dishes.length === 0) {
+                menuContainer.innerHTML = '<p>Ой, Ваше меню пока пусто :(</p>';
+                return;
+            }
+
+            for (const dish of data.menu.dishes) {
+                if (!dish._id) { 
+                    console.error('Dish ID is missing:', dish);
+                    continue; 
+                }
+
+                console.log('Объект блюда перед вызовом populate:', dish); 
+
+                const dishWithIngredients = await populate(dish); 
+                if (dishWithIngredients) {
+                    const menuItem = createDishCard(dishWithIngredients);
+                    menuContainer.appendChild(menuItem);
+                }
+            }
+
+            displayRemainingCalories(data.remainingCalories);
+
+        } else {
+            handleError('menu не является массивом или отсутствует:', data.menu);
+        }
+    } catch (error) {
+        handleError('Ошибка при получении меню:', error);
+    }
 }
 
 
@@ -279,7 +279,7 @@ async function removeDishFromMenu(dishId) {
 
 function displayRemainingCalories(remainingCalories) {
    const remainingCaloriesDiv = document.getElementById('remaining-calories');
-   remainingCaloriesDiv.innerHTML = `<h2>Осталось калорий до суточной нормы:${remainingCalories} ккал</h2>`;
+   remainingCaloriesDiv.innerHTML = `<h2>Осталось калорий до суточной нормы: ${remainingCalories} ккал</h2>`;
    
    const calorieWarning = document.getElementById('calorie-warning');
    if (remainingCalories < 0) { 

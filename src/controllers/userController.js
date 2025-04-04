@@ -45,12 +45,19 @@ export const getUserMenu = async (req, res) => {
 
     try {
         const menu = await Menu.findOne({ userId }).populate('dishes');
+        const user = await User.findById(userId);
 
         if (!menu) {
             return res.status(404).json({ message: 'Меню не найдено' });
         }
 
-        res.json({ menu: { ...menu._doc, dishes: menu.dishes } });
+        const totalCaloriesInMenu = menu.dishes.reduce((total, dish) => total + (dish.calories || 0), 0);
+        const remainingCalories = user.dailyCalorieIntake - totalCaloriesInMenu;
+
+        res.json({ 
+            menu: { ...menu._doc, dishes: menu.dishes },
+            remainingCalories 
+        });
     } catch (error) {
         console.error('Ошибка при получении меню:', error);
         res.status(500).json({ message: 'Ошибка при получении меню' });
