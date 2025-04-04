@@ -11,13 +11,11 @@ import mainRouter from './src/routes/mainRouter.js';
 import calorieRouter from './src/routes/calorieRouter.js';
 import crypto from 'crypto';
 import Ingredient from './src/models/Ingredient.js';
-import cors from 'cors'; 
 import connectDB from './src/db.js'; 
 import registrationRouter from './src/routes/registrationRouter.js';
 import ingredientRoutes from './src/routes/ingredientRoutes.js';
 import userMenuRouter from './src/routes/userMenuRouter.js'
 import dishRoutes from './src/routes/dishRoutes.js';
-import morgan from 'morgan'; 
 import { isAuthenticated } from './src/middleware/authMiddleware.js'; 
 
 const app = express(); 
@@ -47,9 +45,6 @@ app.use(express.static(join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json()); 
 
-app.use(cors()); 
-app.use(morgan('dev')); 
-
 app.use(session({
     secret: secret,
     resave: false,
@@ -64,7 +59,6 @@ app.use((req, res, next) => {
 
 const { RegistrationPage } = registration; 
 app.get('/', RegistrationPage);
-
 app.use('/registration', registrationRouter);
 app.use('/login', loginRouter);
 app.use('/main', mainRouter);

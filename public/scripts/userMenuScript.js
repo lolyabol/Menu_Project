@@ -2,77 +2,73 @@ async function fetchUserMenu() {
     try {
         const response = await fetch('/menu/getMenu');
         if (!response.ok) {
-           throw new Error('Ошибка при получении меню');
-       }
+            throw new Error('Ошибка при получении меню');
+        }
         
-       const data = await response.json();
+        const data = await response.json();
         
-       const menuContainer = document.getElementById('user-menu-container');
-       menuContainer.innerHTML = ''; 
+        const menuContainer = document.getElementById('user-menu-container');
+        menuContainer.innerHTML = ''; 
 
-       if (data && Array.isArray(data.menu)) {
-           console.log('Меню пользователя:', data.menu);
+        if (data && data.menu && Array.isArray(data.menu.dishes)) {
+            console.log('Меню пользователя:', data.menu.dishes);
             
-           if (data.menu.length === 0) {
-               menuContainer.innerHTML = '<p>Ой, Ваше меню пока пусто :(</p>';
-               return;
-           }
+            if (data.menu.dishes.length === 0) {
+                menuContainer.innerHTML = '<p>Ой, Ваше меню пока пусто :(</p>';
+                return;
+            }
 
-           for (const dish of data.menu) {
-               if (!dish._id) { 
-                   console.error('Dish ID is missing:', dish);
-                   continue; 
-               }
+            for (const dish of data.menu.dishes) {
+                if (!dish._id) { 
+                    console.error('Dish ID is missing:', dish);
+                    continue; 
+                }
 
-               console.log('Объект блюда перед вызовом populate:', dish); 
+                console.log('Объект блюда перед вызовом populate:', dish); 
 
-               const dishWithIngredients = await populate(dish); 
-               if (dishWithIngredients) {
-                   const menuItem = createDishCard(dishWithIngredients);
-                   menuContainer.appendChild(menuItem);
-               }
-           }
+                const dishWithIngredients = await populate(dish); 
+                if (dishWithIngredients) {
+                    const menuItem = createDishCard(dishWithIngredients);
+                    menuContainer.appendChild(menuItem);
+                }
+            }
 
-           displayRemainingCalories(data.remainingCalories);
-            
-       } else {
-           handleError('menu не является массивом или отсутствует:', data.menu);
-       }
-   } catch (error) {
-       handleError('Ошибка при получении меню:', error);
-   }
+            displayRemainingCalories(data.remainingCalories);
+
+        } else {
+            handleError('menu не является массивом или отсутствует:', data.menu);
+        }
+    } catch (error) {
+        handleError('Ошибка при получении меню:', error);
+    }
 }
 
-function formatIngredients(ingredientsList) {
-   if (!Array.isArray(ingredientsList) || ingredientsList.length === 0) {
-      return 'Ингредиенты отсутствуют.';
-   }
-
-   return ingredientsList.map(item => {
-       const ingredientName = item.ingredientId && item.ingredientId.name ? item.ingredientId.name : 'Неизвестный ингредиент';
-       return `${item.quantity}г. "${ingredientName}"`;
-   }).join('<br>');
-}
 
 async function populate(dish) {
-   if (!dish._id) {
-       console.error('ID блюда отсутствует:', dish);
-       return;
-   }
+    if (!dish._id) {
+        console.error('ID блюда отсутствует:', dish);
+        return;
+    }
     
-   try {
-       const response = await fetch(`/ingredients/getIngredients?dishId=${dish._id}`);
-       if (!response.ok) {
-           throw new Error('Ошибка при получении ингредиентов');
-       }
+    try {
+        const response = await fetch(`/ingredients/getIngredients?dishId=${dish._id}`);
+        if (!response.ok) {
+            throw new Error('Ошибка при получении ингредиентов');
+        }
         
-       const ingredientsData = await response.json();
-       console.log('Ингредиенты для блюда:', ingredientsData); 
+        const ingredientsData = await response.json();
+        console.log('Ингредиенты для блюда:', ingredientsData);
         
-       return { ...dish, ingredientsList: ingredientsData.ingredients };
-   } catch (error) {
-       console.error('Ошибка при получении ингредиентов для блюда:', error);
-   }
+        if (ingredientsData && Array.isArray(ingredientsData.ingredients)) {
+            return { ...dish, ingredientsList: ingredientsData.ingredients };
+        } else {
+            console.error('Неверная структура данных:', ingredientsData);
+            return { ...dish, ingredientsList: [] }; 
+        }
+    } catch (error) {
+        console.error('Ошибка при получении ингредиентов для блюда:', error);
+        return { ...dish, ingredientsList: [] };
+    }
 }
 
 function createDishCard(dish) {
@@ -83,17 +79,19 @@ function createDishCard(dish) {
         <img src="${dish.imageURL || 'default-image.jpg'}" alt="${dish.name || 'Блюдо'}" />
         <h3>${dish.name || 'Неизвестное блюдо'}</h3>
         
-        <div class="dish-details">
+        <div class="dish-details" style="display: none;">
           <p>Калории: ${dish.calories || 'Не указано'}</p>
           <p>${dish.description || 'Описание отсутствует.'}</p>
           <h4>Рецепт:</h4>
           <p>${dish.recipe || 'Рецепт отсутствует.'}</p>
           <h4>Ингредиенты:</h4>
-          <p>${formatIngredients(dish.ingredientsList)}</p>
+          <p>${Array.isArray(dish.ingredientsList) && dish.ingredientsList.length > 0 
+              ? formatIngredients(dish.ingredientsList)
+              : 'Ингредиенты отсутствуют.'}</p>
           <button class="remove-button" data-dish-id="${dish._id}">Удалить</button>
       </div>
     `;
-
+    
     menuItem.addEventListener('click', () => {
       const details = menuItem.querySelector('.dish-details');
       details.style.display = details.style.display === 'none' ? 'block' : 'none';
@@ -107,6 +105,17 @@ function createDishCard(dish) {
 
     return menuItem;
 }
+
+function formatIngredients(ingredientsList) {
+    const formattedIngredients = ingredientsList.map(item => {
+        return `${item.quantity}г. ингредиента "${item.ingredientName}"`; 
+    }).join('<br>');
+    
+    console.log('Отформатированные ингредиенты:', formattedIngredients);
+    
+    return formattedIngredients;
+}
+
 
 function handleError(message, error) {
    console.error(message, error);
@@ -135,7 +144,7 @@ async function removeDishFromMenu(dishId) {
 
 function displayRemainingCalories(remainingCalories) {
    const remainingCaloriesDiv = document.getElementById('remaining-calories');
-   remainingCaloriesDiv.innerHTML = `<h2>Осталось калорий до суточной нормы:${remainingCalories} ккал</h2>`;
+   remainingCaloriesDiv.innerHTML = `<h2>Осталось калорий до суточной нормы: ${remainingCalories} ккал</h2>`;
    
    const calorieWarning = document.getElementById('calorie-warning');
    if (remainingCalories < 0) { 
